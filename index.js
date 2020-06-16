@@ -14,8 +14,10 @@ const savedMapEmptyStruct = `{"events": [], "markerData": [], "date":""}`;
 class AirtableGraphQL {
 
   getCache(mapNum){
+    console.log("getting cache start");
     //if doesnt exist, create with empty structure
     if(!(fs.existsSync("./cacheMap"+mapNum+".json"))){
+      console.log("creating file for cache");
       fs.writeFileSync("./cacheMap"+mapNum+".json", savedMapEmptyStruct, function(err) {
         if (err) {
             console.log(err);
@@ -24,6 +26,7 @@ class AirtableGraphQL {
     }
 
     let savedMapTxt = JSON.parse(fs.readFileSync("./cacheMap"+mapNum+".json"));
+    console.log("got cache data");
     return savedMapTxt;
   }
 
@@ -44,6 +47,7 @@ class AirtableGraphQL {
         })
       })
       .then(data => {
+        console.log("updated cache");
         return resolve(JSON.parse(fs.readFileSync("./cacheMap"+mapNum+".json")));
       });
     })
@@ -142,6 +146,7 @@ class AirtableGraphQL {
                 oldResponse.date = new Date();
 
                 let savedMap = JSON.stringify(oldResponse);
+                console.log("updating cache");
                 fs.writeFileSync("./cacheMap"+mapNum+".json", savedMap, function(err) {
                   if (err) {
                       console.log(err);
