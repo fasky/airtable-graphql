@@ -29,6 +29,8 @@ class AirtableGraphQL {
 
   //run map query from server
   queryMap(mapNum){
+    console.log("querying map data");
+
     return new Promise((resolve,reject) => {
       fetch("http://localhost:8888/", {
         method:'POST',
