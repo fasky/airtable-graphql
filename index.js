@@ -30,7 +30,7 @@ class AirtableGraphQL {
   //run map query from server
   queryMap(mapNum){
     return new Promise((resolve,reject) => {
-      fetch("http://localhost:4000/", {
+      fetch("http://localhost:8888/", {
         method:'POST',
         headers: {
           'Content-Type': 'application/json'
