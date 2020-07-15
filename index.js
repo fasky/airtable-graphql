@@ -14,10 +14,8 @@ const savedMapEmptyStruct = `{"events": [], "markerData": [], "date":""}`;
 class AirtableGraphQL {
 
   getCache(mapNum){
-    console.log("getting cache start");
     //if doesnt exist, create with empty structure
     if(!(fs.existsSync("./cacheMap"+mapNum+".json"))){
-      console.log("creating file for cache");
       fs.writeFileSync("./cacheMap"+mapNum+".json", savedMapEmptyStruct, function(err) {
         if (err) {
             console.log(err);
@@ -26,13 +24,11 @@ class AirtableGraphQL {
     }
 
     let savedMapTxt = JSON.parse(fs.readFileSync("./cacheMap"+mapNum+".json"));
-    console.log("got cache data");
     return savedMapTxt;
   }
 
   //run map query from server
   queryMap(mapNum){
-    console.log("querying map data");
 
     return new Promise((resolve,reject) => {
       fetch("http://localhost:8888/", {
@@ -47,7 +43,6 @@ class AirtableGraphQL {
         })
       })
       .then(data => {
-        console.log("updated cache");
         return resolve(JSON.parse(fs.readFileSync("./cacheMap"+mapNum+".json")));
       });
     })
@@ -108,7 +103,8 @@ class AirtableGraphQL {
                     "start_date": {
                       "month": "",
                       "day": "",
-                      "year": ""
+                      "year": "",
+                      "hour": "",
                     },
                     "text": {
                       "headline": "",
@@ -124,7 +120,11 @@ class AirtableGraphQL {
                   let date = str.split("-");
                   oldResponse.events[i].start_date.month = date[1];
                   oldResponse.events[i].start_date.day = date[2];
-                  oldResponse.events[i].start_date.year = date[0];       
+                  oldResponse.events[i].start_date.year = date[0];
+                  
+                  if(date.length > 3){
+                    oldResponse.events[i].start_date.hour = date[3];
+                  }
                   
                   //marker stuff
                   oldResponse.markerData.push({
@@ -146,7 +146,6 @@ class AirtableGraphQL {
                 oldResponse.date = new Date();
 
                 let savedMap = JSON.stringify(oldResponse);
-                console.log("updating cache");
                 fs.writeFileSync("./cacheMap"+mapNum+".json", savedMap, function(err) {
                   if (err) {
                       console.log(err);
