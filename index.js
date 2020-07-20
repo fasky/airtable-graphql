@@ -9,9 +9,21 @@ const helmet = require('helmet');
 
 //temp "cache"
 const savedMapEmptyStruct = `{"events": [], "markerData": [], "date":""}`;
+const NUM_MAPS = 2;
 
 //changes - cache stuff, parse response, run query
 class AirtableGraphQL {
+
+  resetCache(){
+    for(let i = 1; i < (NUM_MAPS+1);i++){
+      fs.writeFileSync("./cacheMap"+i+".json", savedMapEmptyStruct, function(err) {
+        if (err) {
+            console.log(err);
+        }
+      });
+    }
+    
+  }
 
   getCache(mapNum){
     //if doesnt exist, create with empty structure
